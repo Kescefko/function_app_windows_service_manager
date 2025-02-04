@@ -6,4 +6,5 @@ az functionapp create \
   --runtime python \
   --runtime-version 3.10 \
   --name func-gyorgy-shared-dev \
-  --storage-account stgyorgyfuncdev
+  --storage-account stgyorgyfuncdev \
+  --os-type Linux
