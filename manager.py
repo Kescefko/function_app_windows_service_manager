@@ -1,6 +1,7 @@
 import subprocess
 import os
 import logging
+import azure.functions as func
 
 # Setup logging
 LOG_FILE = "C:\\Automation\\service_log.txt"
@@ -52,8 +53,21 @@ def start_service(service_name):
         return error_message
 
 
-if __name__ == "__main__":
-    service_name = "Spooler"  # Change this to any Windows service you'd like to test.
+def main(req: func.HttpRequest) -> func.HttpResponse:
+    """Azure Function HTTP Trigger to Start a Windows Service."""
+    service_name = req.params.get('service')
+    
+    if not service_name:
+        try:
+            req_body = req.get_json()
+            service_name = req_body.get('service')
+        except ValueError:
+            pass
+
+    if not service_name:
+        return func.HttpResponse("Please provide a 'service' parameter in the query string or request body.", status_code=400)
+
     result = start_service(service_name)
-    print(result)
+
+    return func.HttpResponse(result, status_code=200)
 
