@@ -1,3 +1,5 @@
+#!/bin/bash
+
 az functionapp create \
   --resource-group rg-gyorgy-shared-dev \
   --consumption-plan-location germanywestcentral \
