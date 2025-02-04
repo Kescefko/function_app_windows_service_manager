@@ -5,6 +5,9 @@ import logging
 # Setup logging
 LOG_FILE = "C:\\Automation\\service_log.txt"
 
+# Ensure the directory exists
+os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
+
 # Ensure the log file exists; create it if it doesn't
 if not os.path.exists(LOG_FILE):
     with open(LOG_FILE, 'w'):  # Create an empty log file
