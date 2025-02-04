@@ -17,27 +17,32 @@ logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(asctime)s -
 
 
 def check_service_status(service_name):
-    """Check if a Windows service is running."""
+    """Check if a Windows service is running using PowerShell."""
     try:
-        result = subprocess.run(["sc", "query", service_name], capture_output=True, text=True)
-        if "RUNNING" in result.stdout:
-            return "RUNNING"
-        else:
-            return "STOPPED"
+        result = subprocess.run(
+            ["powershell", "-Command", f"Get-Service -Name {service_name} | Select-Object -ExpandProperty Status"],
+            capture_output=True, text=True
+        )
+        status = result.stdout.strip()
+        return status
     except Exception as e:
         return f"ERROR: {str(e)}"
 
+
 def start_service(service_name):
-    """Start a Windows service only if it is not already running."""
+    """Start a Windows service using PowerShell if it is not already running."""
     status = check_service_status(service_name)
-    
-    if status == "RUNNING":
+
+    if status == "Running":
         message = f"Service '{service_name}' is already running. No action needed."
         logging.info(message)
         return message
 
     try:
-        result = subprocess.run(["sc", "start", service_name], capture_output=True, text=True, check=True)
+        subprocess.run(
+            ["powershell", "-Command", f"Start-Service -Name {service_name}"],
+            capture_output=True, text=True, check=True
+        )
         message = f"Service '{service_name}' started successfully."
         logging.info(message)
         return message
