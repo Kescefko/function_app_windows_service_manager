@@ -1,8 +1,15 @@
 import subprocess
+import os
 import logging
 
 # Setup logging
 LOG_FILE = "C:\\Automation\\service_log.txt"
+
+# Ensure the log file exists; create it if it doesn't
+if not os.path.exists(LOG_FILE):
+    with open(LOG_FILE, 'w'):  # Create an empty log file
+        pass
+
 logging.basicConfig(filename=LOG_FILE, level=logging.INFO, format="%(asctime)s - %(message)s")
 
 def start_service(service_name):
